@@ -16,6 +16,29 @@ class DataBase {
     const shortenedObg = this.urls.find((urlObj) => urlObj.id === shortened);
     return shortenedObg.full;
   }
+  save() {
+    try {
+      fs.writeFile(
+        process.cwd() + "/DataBase/shortened.json",
+        JSON.stringify(this.urls),
+        (err) => {
+          if (err) throw err;
+          else return "OK";
+        }
+      );
+    } catch (err) {
+      return err;
+    }
+  }
+
+  load() {
+    fs.readFile(process.cwd() + "/DataBase/shortened.json", {}, (err, data) => {
+      if (err) throw err;
+      else {
+        return data;
+      }
+    });
+  }
 }
 
 class ShortenedURL {
