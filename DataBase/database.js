@@ -25,12 +25,24 @@ class DataBase {
 
   getIdByFullUrl(full) {
     const shortenedObg = this.urls.find((urlObj) => urlObj.full === full);
-    return shortenedObg.id;
+    if (shortenedObg) {
+      return shortenedObg.id;
+    }
+    return null;
   }
 
   getObjById(id) {
     const shortenedObg = this.urls.find((urlObj) => urlObj.id === id);
     return shortenedObg;
+  }
+
+  getAllData(prop) {
+    const clonedArr = this.urls.filter(() => true); //to make a copy of this.urls so that user can't change it by accident
+    if (prop) {
+      return clonedArr.sort((a, b) => b[prop] - a[prop]);
+    }
+    console.log(clonedArr);
+    return clonedArr;
   }
 
   save() {

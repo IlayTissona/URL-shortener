@@ -37,6 +37,12 @@ app.get("/api/statistic/:id", (req, res) => {
   res.json(urlObj);
 });
 
+app.get("/api/statistics/:prop?", (req, res) => {
+  const { prop } = req.params; // /clicks - will return sorted most to least clicked, /date - will return sorted by date
+  const urlsArr = dataBase.getAllData(prop);
+  res.json(urlsArr);
+});
+
 module.exports = app;
 
 //---------------------middleWares-----------------------
