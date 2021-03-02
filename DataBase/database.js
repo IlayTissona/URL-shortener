@@ -9,12 +9,17 @@ class DataBase {
   addShortened(fullURL) {
     const shortened = new ShortenedURL(fullURL);
     this.urls.push(shortened);
-    return shortened.id;
+    return new Promise((resolve, reject) => {
+      this.save()
+        .then(() => resolve(shortened.id))
+        .catch(() => reject("Error"));
+    });
   }
 
   getFullUrl(shortened) {
     const shortenedObg = this.urls.find((urlObj) => urlObj.id === shortened);
-    // console.log(shortenedObg.full);
+    shortenedObg.clicks++;
+    this.save();
     return shortenedObg.full;
   }
 
