@@ -28,4 +28,10 @@ app.post("/new", (req, res) => {
     .catch((e) => res.sendStatus(500));
 });
 
+app.get("/short/:id", (req, res) => {
+  // console.log(req.params.id);
+  let full = dataBase.getFullUrl(req.params.id);
+  res.status(302).redirect(full);
+});
+
 module.exports = app;
