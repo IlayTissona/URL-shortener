@@ -14,8 +14,10 @@ class DataBase {
 
   getFullUrl(shortened) {
     const shortenedObg = this.urls.find((urlObj) => urlObj.id === shortened);
+    // console.log(shortenedObg.full);
     return shortenedObg.full;
   }
+
   save() {
     return new Promise((resolve, reject) => {
       fs.writeFile(
@@ -28,6 +30,7 @@ class DataBase {
       );
     });
   }
+
   load() {
     return new Promise((resolve, reject) => {
       fs.readFile(
@@ -35,12 +38,16 @@ class DataBase {
         {},
         (err, data) => {
           if (err) reject(err);
-          else resolve(JSON.parse(data));
+          else {
+            this.urls = JSON.parse(data);
+            resolve("OK");
+          }
         }
       );
     });
   }
 }
+
 class ShortenedURL {
   constructor(fullURL) {
     this.full = fullURL;
@@ -76,16 +83,4 @@ function generateID(length) {
   return id;
 }
 
-const test = new DataBase();
-
-console.log(test.addShortened("www.dasv.sdfv"));
-console.log(test.addShortened("www.fvsvf.sdfv"));
-console.log(test.addShortened("www.hghhr.sdfv"));
-console.log(test.addShortened("www.asdf.sdfv"));
-console.log(test.addShortened("www.dalkjsv.sdfv"));
-test.save().then(
-  test
-    .load()
-    .then((res) => console.log(res))
-    .catch((err) => console.log(err))
-);
+module.exports = DataBase;
