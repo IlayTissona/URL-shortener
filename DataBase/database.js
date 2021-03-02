@@ -28,6 +28,11 @@ class DataBase {
     return shortenedObg.id;
   }
 
+  getObjById(id) {
+    const shortenedObg = this.urls.find((urlObj) => urlObj.id === id);
+    return shortenedObg;
+  }
+
   save() {
     return new Promise((resolve, reject) => {
       fs.writeFile(

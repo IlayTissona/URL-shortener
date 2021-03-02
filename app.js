@@ -32,6 +32,11 @@ app.get("/api/short/:id", (req, res) => {
   res.status(302).redirect(full);
 });
 
+app.get("/api/statistic/:id", (req, res) => {
+  let urlObj = dataBase.getObjById(req.params.id);
+  res.json(urlObj);
+});
+
 module.exports = app;
 
 //---------------------middleWares-----------------------
