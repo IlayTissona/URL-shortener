@@ -17,30 +17,30 @@ class DataBase {
     return shortenedObg.full;
   }
   save() {
-    try {
+    return new Promise((resolve, reject) => {
       fs.writeFile(
         process.cwd() + "/DataBase/shortened.json",
         JSON.stringify(this.urls),
         (err) => {
-          if (err) throw err;
-          else return "OK";
+          if (err) reject(err);
+          else resolve("OK");
         }
       );
-    } catch (err) {
-      return err;
-    }
+    });
   }
-
   load() {
-    fs.readFile(process.cwd() + "/DataBase/shortened.json", {}, (err, data) => {
-      if (err) throw err;
-      else {
-        return data;
-      }
+    return new Promise((resolve, reject) => {
+      fs.readFile(
+        process.cwd() + "/DataBase/shortened.json",
+        {},
+        (err, data) => {
+          if (err) reject(err);
+          else resolve(JSON.parse(data));
+        }
+      );
     });
   }
 }
-
 class ShortenedURL {
   constructor(fullURL) {
     this.full = fullURL;
@@ -83,4 +83,9 @@ console.log(test.addShortened("www.fvsvf.sdfv"));
 console.log(test.addShortened("www.hghhr.sdfv"));
 console.log(test.addShortened("www.asdf.sdfv"));
 console.log(test.addShortened("www.dalkjsv.sdfv"));
-console.log(test.save());
+test.save().then(
+  test
+    .load()
+    .then((res) => console.log(res))
+    .catch((err) => console.log(err))
+);
