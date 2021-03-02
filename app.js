@@ -50,9 +50,9 @@ function urlCheck(req, res, next) {
 
 function returnExisting(req, res, next) {
   const { fullUrl } = req.body;
-  const existing = dataBase.urls.find((urlObj) => urlObj.full === fullUrl);
+  const existing = dataBase.getIdByFullUrl(fullUrl);
   if (existing) {
-    res.send(existing.id);
+    res.send(existing);
   } else {
     next();
   }

@@ -23,6 +23,11 @@ class DataBase {
     return shortenedObg.full;
   }
 
+  getIdByFullUrl(full) {
+    const shortenedObg = this.urls.find((urlObj) => urlObj.full === full);
+    return shortenedObg.id;
+  }
+
   save() {
     return new Promise((resolve, reject) => {
       fs.writeFile(
