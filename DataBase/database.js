@@ -6,6 +6,13 @@ class DataBase {
     this.urls = [];
   }
 
+  // constructor() {
+  //   const bufferData = fs.readFileSync(
+  //     process.cwd() + "/DataBase/shortened.json"
+  //   );
+  //   this.urls = JSON.parse(bufferData);
+  // }
+
   addShortened(fullURL) {
     const shortened = new ShortenedURL(fullURL);
     this.urls.push(shortened);
@@ -22,6 +29,9 @@ class DataBase {
 
   getFullUrl(shortened) {
     const shortenedObg = this.urls.find((urlObj) => urlObj.id === shortened);
+    if (!shortenedObg) {
+      return null;
+    }
     shortenedObg.clicks++;
     this.save();
     return shortenedObg.full;

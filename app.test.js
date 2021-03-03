@@ -2,40 +2,130 @@ const { describe, it, expect } = require("@jest/globals");
 const request = require("supertest");
 const app = require("./app.js");
 const FS = require("fs");
+const dataBase = require("./dataBaseIndex.js");
+const { TestScheduler } = require("jest");
+const dataCheck = {
+  full: "http://www.testurl.test",
+  id: "Akemu",
+  createdAt: 1614772880864,
+  clicks: 0,
+};
+
+beforeAll(async () => {
+  await dataBase.load();
+});
 
 describe("Post method tests", () => {
   it("Should be able to get shortened URL", async () => {
     let response = await request(app)
       .post("/api/short/new")
-      .send({ fullUrl: "http://www.testurl.test" }); //c6BfR
+      .send({ fullUrl: "http://www.testurl.test" });
     expect(response.status).toBe(200);
-    expect(response.text.length).toBe(5);
+    expect(response.text.length).toBeLessThan("http://www.testurl.test".length);
   });
-  it("Should response with an error if receiving invalid URL", async () => {
+  it("Should response with an error if receiving an invalid URL", async () => {
     let response = await request(app)
       .post("/api/short/new")
       .send({ fullUrl: "zcp://dfww.testcvburl.sdfsdfvvfd" });
     expect(response.status).toBe(400);
     expect(response.text).toBe(`{"error":"invalid url"}`);
   });
-
-  // todo invalid post method test
+  it("Should response with the same id if receiving an existing URL", async () => {
+    let response = await request(app)
+      .post("/api/short/new")
+      .send({ fullUrl: "http://www.testurl.test" });
+    expect(response.status).toBe(200);
+    expect(response.text).toBe(dataCheck.id);
+  });
 });
 
-// describe("Get method tests", () => {
-//   it("Should be able to get redirected", async () => {
-//     let response = await request(DB).get("/b/test-collection/test-file");
-//     expect(response.status).toBe(200);
-//     expect(response.body).toEqual(testFile);
-//   });
-//   it("Should send an appropriate response if an illegal id is requested ", async () => {
-//     let response = await request(DB).get(
-//       "/b/test-collection/test-notExistingFile"
-//     );
-//     expect(response.status).toBe(404);
-//     expect(response.text).toBe("File does not exist!");
-//   });
-// });
+describe("Get method tests", () => {
+  it("Should be able to get redirected", async () => {
+    let response = await request(app).get("/api/short/" + dataCheck.id);
+    expect(response.status).toBe(302);
+    expect(response.header.location).toEqual(dataCheck.full);
+  });
+
+  it("Should be able to get statistics for a short URL", async () => {
+    let response = await request(app).get("/api/statistic/" + dataCheck.id);
+    expect(response.status).toBe(200);
+    const resText = response.text;
+    const numberRegEx = /\"clicks\":(\d*)/;
+    const clicks = resText.match(numberRegEx);
+    expect(resText).toEqual(
+      `{\"full\":\"http://www.testurl.test\",\"id\":\"Akemu\",\"createdAt\":1614772880864,${clicks[0]}}`
+    );
+  });
+
+  it("Should add 1 to 'clicks' when redirecting", async () => {
+    let response = await request(app).get("/api/statistic/" + dataCheck.id);
+    expect(response.status).toBe(200);
+    const clicksBefore = response.body.clicks;
+    await request(app).get("/api/short/" + dataCheck.id);
+    let response2 = await request(app).get("/api/statistic/" + dataCheck.id);
+    expect(response.status).toBe(200);
+    const clicksAfter = response2.body.clicks;
+
+    expect(clicksAfter).toBe(clicksBefore + 1);
+  });
+
+  it("Should return an error when recieveing an invalid ID", async () => {
+    let response = await request(app).get("/api/short/" + "not-existingid");
+    expect(response.status).toBe(404);
+    expect(response.text).toBe(`Not Found`);
+  });
+});
+
+describe("Final test in honor of Ricky LaFlour", () => {
+  test("it should be doing all the shit that needs to be done", async () => {
+    let postRes = await request(app)
+      .post("/api/short/new")
+      .send({ fullUrl: "http://www.testurl.test" });
+    expect(postRes.status).toBe(200);
+    expect(postRes.text.length).toBeLessThan("http://www.testurl.test".length);
+
+    let inValidPostRes = await request(app)
+      .post("/api/short/new")
+      .send({ fullUrl: "zcp://dfww.testcvburl.sdfsdfvvfd" });
+    expect(inValidPostRes.status).toBe(400);
+    expect(inValidPostRes.text).toBe(`{"error":"invalid url"}`);
+
+    let sameIdPostRes = await request(app)
+      .post("/api/short/new")
+      .send({ fullUrl: "http://www.testurl.test" });
+    expect(sameIdPostRes.status).toBe(200);
+    expect(sameIdPostRes.text).toBe(dataCheck.id);
+
+    let firstGetRes = await request(app).get("/api/short/" + dataCheck.id);
+    expect(firstGetRes.status).toBe(302);
+    expect(firstGetRes.header.location).toEqual(dataCheck.full);
+
+    let statisticsRes = await request(app).get(
+      "/api/statistic/" + dataCheck.id
+    );
+    expect(statisticsRes.status).toBe(200);
+    const resText = statisticsRes.text;
+    const numberRegEx = /\"clicks\":(\d*)/;
+    const clicks = resText.match(numberRegEx);
+    expect(resText).toEqual(
+      `{\"full\":\"http://www.testurl.test\",\"id\":\"Akemu\",\"createdAt\":1614772880864,${clicks[0]}}`
+    );
+
+    let clicksRes = await request(app).get("/api/statistic/" + dataCheck.id);
+    expect(clicksRes.status).toBe(200);
+    const clicksBefore = clicksRes.body.clicks;
+    await request(app).get("/api/short/" + dataCheck.id);
+    let clicksRes2 = await request(app).get("/api/statistic/" + dataCheck.id);
+    expect(clicksRes.status).toBe(200);
+    const clicksAfter = clicksRes2.body.clicks;
+
+    expect(clicksAfter).toBe(clicksBefore + 1);
+
+    let response = await request(app).get("/api/short/" + "not-existingid");
+    expect(response.status).toBe(404);
+    expect(response.text).toBe(`Not Found`);
+  });
+});
 
 // describe("PUT method tests", () => {
 //   it("can update a bin by ID", async () => {
@@ -46,7 +136,7 @@ describe("Post method tests", () => {
 //     let response = await request(DB)
 //       .put("/b/test-collection/test-put-file")
 //       .send({ postTest: "put-test-value" });
-//     expect(response.status).toBe(200);
+//     expect(resppoonse.status).toBe(200);
 //     let getSecondResponse = await request(DB).get(
 //       "/b/test-collection/test-put-file"
 //     );

@@ -2,11 +2,7 @@ require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
 const app = express();
-const DataBase = require("./DataBase/database.js");
-// const middleWares = require("./middlwares.js");
-
-const dataBase = new DataBase();
-dataBase.load().then((res) => res);
+const dataBase = require("./dataBaseIndex");
 
 app.use(cors());
 app.use(express.json());
@@ -28,16 +24,27 @@ app.post("/api/short/new", urlCheck, returnExisting, (req, res) => {
 
 app.get("/api/short/:id", (req, res) => {
   let full = dataBase.getFullUrl(req.params.id);
+  if (!full) {
+    res.sendStatus(404);
+    return;
+  }
   res.status(302).redirect(full);
 });
 
 app.get("/api/statistic/:id", (req, res) => {
   let urlObj = dataBase.getObjById(req.params.id);
+  if (!urlObj) {
+    res.sendStatus(404);
+    return;
+  }
   res.json(urlObj);
 });
 
 app.get("/api/statistics/:prop?", (req, res) => {
   const { prop } = req.params; // /clicks - will return sorted most to least clicked, /date - will return sorted by date
+  if (prop !== "clicks" && prop !== "createdAt") {
+    res.status(400).send("No such prop");
+  }
   const urlsArr = dataBase.getAllData(prop);
   res.json(urlsArr);
 });
