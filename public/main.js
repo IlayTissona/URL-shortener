@@ -54,7 +54,21 @@ timeSort.addEventListener("click", (event) => {
     .then((response) => {
       printTable(response.data);
     });
+  clearInterval(updates);
 });
+
+axios
+  .get(window.location.origin + "/api/statistics/clicks")
+  .then((response) => {
+    printTable(response.data);
+  });
+// const updates = setInterval(() => {
+//   axios
+//     .get(window.location.origin + "/api/statistics/clicks")
+//     .then((response) => {
+//       printTable(response.data);
+//     });
+// }, 5000);
 
 function printShortened(response) {
   const resDiv = document.getElementById("response-div");
@@ -87,6 +101,9 @@ function printTableRow(urlObj) {
       cell.innerText = printDate(date);
     } else {
       cell.innerText = urlObj[prop];
+    }
+    if (prop === "full") {
+      cell.className = "full-url-cell";
     }
     row.append(cell);
   }
