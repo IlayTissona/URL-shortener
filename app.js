@@ -21,7 +21,6 @@ app.post("/api/short/new", urlCheck, returnExisting, (req, res) => {
   dataBase
     .addShortened(req.body.fullUrl)
     .then((id) => {
-      console.log(id);
       res.send(id);
     })
     .catch((e) => res.sendStatus(500));

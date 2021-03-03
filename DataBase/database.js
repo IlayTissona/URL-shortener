@@ -11,8 +11,12 @@ class DataBase {
     this.urls.push(shortened);
     return new Promise((resolve, reject) => {
       this.save()
-        .then(() => resolve(shortened.id))
-        .catch(() => reject("Error"));
+        .then(() => {
+          resolve(shortened.id);
+        })
+        .catch(() => {
+          reject("Error");
+        });
     });
   }
 
@@ -41,7 +45,6 @@ class DataBase {
     if (prop) {
       return clonedArr.sort((a, b) => b[prop] - a[prop]);
     }
-    console.log(clonedArr);
     return clonedArr;
   }
 

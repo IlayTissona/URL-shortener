@@ -2,33 +2,25 @@ const { describe, it, expect } = require("@jest/globals");
 const request = require("supertest");
 const app = require("./app.js");
 const FS = require("fs");
-const testFile = {
-  property1: "test-property1 value",
-  property2: "test-property2 value",
-  property3: "test-property3 value",
-  property4: "test-property4 value",
-};
 
-// describe("Post method tests", () => {
-//   it("Should be able to add a new bin", async () => {
-//     let response = await request(DB)
-//       .post("/b/test-collection/post-test")
-//       .send({ postTest: "post-test-value" });
-//     expect(response.status).toBe(200);
-//     let getResponse = await request(DB).get("/b/test-collection/post-test");
+describe("Post method tests", () => {
+  it("Should be able to get shortened URL", async () => {
+    let response = await request(app)
+      .post("/api/short/new")
+      .send({ fullUrl: "http://www.testurl.test" }); //c6BfR
+    expect(response.status).toBe(200);
+    expect(response.text.length).toBe(5);
+  });
+  it("Should response with an error if receiving invalid URL", async () => {
+    let response = await request(app)
+      .post("/api/short/new")
+      .send({ fullUrl: "zcp://dfww.testcvburl.sdfsdfvvfd" });
+    expect(response.status).toBe(400);
+    expect(response.text).toBe(`{"error":"invalid url"}`);
+  });
 
-//     expect(getResponse.status).toBe(200);
-//     expect(getResponse.body).toEqual({ postTest: "post-test-value" });
-//   });
-
-//   // todo invalid post method test
-// });
-
-
-
-
-
-
+  // todo invalid post method test
+});
 
 // describe("Get method tests", () => {
 //   it("Should be able to get redirected", async () => {
@@ -44,8 +36,6 @@ const testFile = {
 //     expect(response.text).toBe("File does not exist!");
 //   });
 // });
-
-
 
 // describe("PUT method tests", () => {
 //   it("can update a bin by ID", async () => {
@@ -102,4 +92,4 @@ const testFile = {
 //     expect(response.status).toBe(404);
 //     expect(response.text).toBe("File does not exist!");
 //   });
-});
+// });
