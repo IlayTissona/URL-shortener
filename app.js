@@ -42,10 +42,15 @@ app.get("/api/statistic/:id", (req, res) => {
 
 app.get("/api/statistics/:prop?", (req, res) => {
   const { prop } = req.params; // /clicks - will return sorted most to least clicked, /date - will return sorted by date
-  if (prop !== "clicks" && prop !== "createdAt") {
+  let urlsArr;
+  if (!prop) {
+    urlsArr = dataBase.getAllData();
+  } else if (prop !== "clicks" && prop !== "createdAt") {
     res.status(400).send("No such prop");
+  } else {
+    urlsArr = dataBase.getAllData(prop);
   }
-  const urlsArr = dataBase.getAllData(prop);
+
   res.json(urlsArr);
 });
 

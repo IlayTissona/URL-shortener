@@ -1,8 +1,11 @@
-// const axios = require("axios");
-// import axios from "axios";
 const inputURL = document.getElementById("url_input");
 const shortButton = document.getElementById("submit");
-console.log("dfvs");
+const statisticInput = document.getElementById("statistic-input");
+const statisticButton = document.getElementById("statistic-button");
+const topUsedButton = document.getElementById("top-used-button");
+const timeSort = document.getElementById("time-sort-button");
+const statisticTable = document.getElementById("statistics-table");
+
 shortButton.addEventListener("click", (event) => {
   if (!inputURL.value) {
     alert("Please enter URL to short");
@@ -20,17 +23,46 @@ shortButton.addEventListener("click", (event) => {
     });
 });
 
+statisticButton.addEventListener("click", (event) => {
+  if (!statisticInput.value) {
+    axios.get(window.location.origin + "/api/statistics/").then((response) => {
+      console.log(response);
+      printTable(response.data);
+    });
+    // .catch((error) => {
+    //   printError(error);
+    // });
+  }
+});
+
 function printShortened(response) {
   const resDiv = document.getElementById("response-div");
   resDiv.style["backgroundColor"] = "green";
   resDiv.innerText = `Short Url : ${window.location.origin}/api/short/${response.data}`;
 }
+
 function printError(error) {
   const resDiv = document.getElementById("response-div");
   resDiv.style["backgroundColor"] = "red";
-  // if(error.)
-  resDiv.innerText = `Error: ${error.response.data.error} - (Status code ${error.response.status})`;
-  console.log(error.response.data);
-  console.log(error.response.status);
-  console.log(error.response.headers);
+  resDiv.innerText = `Error: ${error.response.data.error}  (Status code ${error.response.status})`;
+}
+
+function printTable(urlsArr) {
+  statisticTable.innerHTML = `<th>Full URL</th>
+  <th>Shortened URL</th>
+  <th>Created at</th>
+  <th>Clicks</th>`;
+  urlsArr.forEach((urlObj) => {
+    printTableRow(urlObj);
+  });
+}
+
+function printTableRow(urlObj) {
+  const row = document.createElement("tr");
+  for (prop in urlObj) {
+    let cell = document.createElement("td");
+    cell.innerText = urlObj[prop];
+    row.append(cell);
+  }
+  statisticTable.append(row);
 }
