@@ -1,6 +1,6 @@
 // const { default: axios } = require("axios");
 
-const inputURL = document.getElementById("url_input");
+const inputURL = document.getElementById("url-input");
 const shortButton = document.getElementById("submit");
 const statisticInput = document.getElementById("statistic-input");
 const statisticButton = document.getElementById("statistic-button");

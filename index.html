@@ -11,24 +11,25 @@
   <body>
     <h1>URL Shortener</h1>
     <section id="input-section">
-      <label id="input-label" for="url_input">URL:</label>
+      <label id="input-label" for="url_input">Enter full URL:</label>
       <input
-        id="url_input"
+        id="url-input"
         type="text"
         name="url"
         placeholder="https://www.freecodecamp.org/"
       />
       <button id="submit">Go</button>
-      <div id="response-div"></div>
+
+      <input
+        id="statistic-input"
+        type="text"
+        placeholder="Id for statistics (empty to show all)"
+      />
+      <button id="statistic-button">Search</button>
+      <button id="top-used-button">Most used</button>
+      <button id="time-sort-button">New to old</button>
     </section>
-    <input
-      id="statistic-input"
-      type="text"
-      placeholder="Id for statistics (empty input will print all)"
-    />
-    <button id="statistic-button">Search</button>
-    <button id="top-used-button">Most used</button>
-    <button id="time-sort-button">New to old</button>
+    <div id="response-div"></div>
     <table id="statistics-table">
       <th>Full URL</th>
       <th>Shortened URL</th>
@@ -36,9 +37,30 @@
       <th>Clicks</th>
     </table>
 
-    <footer>
-      <p>By <a href="https://github.com/IlayTissona/">Ilay Tissona</a></p>
-    </footer>
+    <div id="contact-indormation">
+      Ilay Tissona
+      <a href="https://www.facebook.com/ilay.tissona" target="_blank"
+        ><img
+          class="contact-logo"
+          id="facebook-link"
+          src="./images/facebook.png"
+      /></a>
+      <a href="https://github.com/IlayTissona" target="_blank"
+        ><img class="contact-logo" id="github-link" src="./images/github.png"
+      /></a>
+      <a href="mailto:ilay211@gmail.com" target="_blank">
+        <img class="contact-logo" id="mail-link" src="./images/email.png"
+      /></a>
+      <a
+        href="https://wa.me/972536204048?text=I%20like%20your%20ToDo%20list"
+        target="_blank"
+      >
+        <img
+          class="contact-logo"
+          id="whatsapp-link"
+          src="./images/whatsapp.png"
+      /></a>
+    </div>
     <script src="./public/main.js"></script>
   </body>
 </html>
