@@ -10,7 +10,7 @@ app.use(express.json());
 app.use("/public", express.static(`./public`));
 
 app.get("/", (req, res) => {
-  res.sendFile(process.cwd() + "/views/index.html");
+  res.sendFile(process.cwd() + "/index.html");
 });
 
 app.post("/api/short/new", urlCheck, returnExisting, (req, res) => {

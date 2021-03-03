@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <title>URL Shortener</title>
+    <link rel="icon" type="image/png" href="../public/favicon.ico" />
+    <link href="./public/style.css" rel="stylesheet" type="text/css" />
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+  </head>
+
+  <body>
+    <h1>URL Shortener</h1>
+    <section>
+      <legend>URL Shortener</legend>
+      <label for="url_input">URL:</label>
+      <input
+        id="url_input"
+        type="text"
+        name="url"
+        placeholder="https://www.freecodecamp.org/"
+      />
+      <button id="submit">Go</button>
+      <div id="response-div"></div>
+    </section>
+    <table id="statistics-table">
+      <th>Full URL</th>
+      <th>Shortened URL</th>
+      <th>Created at</th>
+      <th>Clicks</th>
+    </table>
+
+    <footer>
+      <p>By <a href="https://github.com/IlayTissona/">Ilay Tissona</a></p>
+    </footer>
+    <script src="./public/main.js"></script>
+  </body>
+</html>
