@@ -1,3 +1,5 @@
+// const { default: axios } = require("axios");
+
 const inputURL = document.getElementById("url_input");
 const shortButton = document.getElementById("submit");
 const statisticInput = document.getElementById("statistic-input");
@@ -29,10 +31,29 @@ statisticButton.addEventListener("click", (event) => {
       console.log(response);
       printTable(response.data);
     });
-    // .catch((error) => {
-    //   printError(error);
-    // });
+  } else {
+    axios
+      .get(window.location.origin + "/api/statistic/" + statisticInput.value)
+      .then((response) => {
+        printTable([response.data]);
+      });
   }
+});
+
+topUsedButton.addEventListener("click", (event) => {
+  axios
+    .get(window.location.origin + "/api/statistics/clicks")
+    .then((response) => {
+      printTable(response.data);
+    });
+});
+
+timeSort.addEventListener("click", (event) => {
+  axios
+    .get(window.location.origin + "/api/statistics/createdAt")
+    .then((response) => {
+      printTable(response.data);
+    });
 });
 
 function printShortened(response) {
@@ -61,8 +82,29 @@ function printTableRow(urlObj) {
   const row = document.createElement("tr");
   for (prop in urlObj) {
     let cell = document.createElement("td");
-    cell.innerText = urlObj[prop];
+    if (prop === "createdAt") {
+      const date = new Date(urlObj[prop]);
+      cell.innerText = printDate(date);
+    } else {
+      cell.innerText = urlObj[prop];
+    }
     row.append(cell);
   }
   statisticTable.append(row);
+}
+
+function printDate(date) {
+  let out = {
+    year: date.getYear() - 100,
+    month: date.getMonth() + 1,
+    day: date.getDate(),
+    hours: date.getHours(),
+    minutes: date.getMinutes(),
+  };
+  for (let number in out) {
+    if (Number(out[number]) < 10) {
+      out[number] = "0" + out[number];
+    }
+  }
+  return `${out.day}/${out.month}/${out.year} - ${out.hours}:${out.minutes}`; // DD/MM/YYYY - HH:MM
 }
