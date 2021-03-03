@@ -12,15 +12,25 @@ shortButton.addEventListener("click", (event) => {
     .post(window.location.origin + "/api/short/new", {
       fullUrl: inputURL.value,
     })
-    .then(function (response) {
-      // handle success
-      console.log(response);
+    .then((response) => {
+      printShortened(response);
     })
-    .catch(function (error) {
-      // handle error
-      console.log(error);
-    })
-    .then(function () {
-      // always executed
+    .catch((error) => {
+      printError(error);
     });
 });
+
+function printShortened(response) {
+  const resDiv = document.getElementById("response-div");
+  resDiv.style["backgroundColor"] = "green";
+  resDiv.innerText = `Short Url : ${window.location.origin}/api/short/${response.data}`;
+}
+function printError(error) {
+  const resDiv = document.getElementById("response-div");
+  resDiv.style["backgroundColor"] = "red";
+  // if(error.)
+  resDiv.innerText = `Error: ${error.response.data.error} - (Status code ${error.response.status})`;
+  console.log(error.response.data);
+  console.log(error.response.status);
+  console.log(error.response.headers);
+}
