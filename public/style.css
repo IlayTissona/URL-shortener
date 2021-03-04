@@ -88,7 +88,6 @@ table {
   height: 20vh;
   overflow-y: scroll;
   text-align: center;
-  display: flexbox;
 }
 
 table th {
@@ -104,5 +103,15 @@ table tr .full-url-cell {
 table tr {
   height: 5vh;
   margin-top: 0;
+}
+
+#copy-tooltip {
+  width: 20vw;
+  text-align: center;
+  background-color: rgba(47, 79, 79, 0.548);
+  border: 2px solid rgba(47, 79, 79, 0.3);
+  position: fixed;
+  width: 100%;
+  bottom: 10vh;
 }
 /*# sourceMappingURL=style.css.map */

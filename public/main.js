@@ -54,7 +54,25 @@ timeSort.addEventListener("click", (event) => {
     .then((response) => {
       printTable(response.data);
     });
-  clearInterval(updates);
+  // clearInterval(updates);
+});
+
+statisticTable.addEventListener("click", (event) => {
+  if (event.target.className !== "short-url-cell") return;
+  navigator.clipboard.writeText(
+    window.location.origin + "/api/short/" + event.target.innerText
+  );
+});
+
+statisticTable.addEventListener("mouseover", (event) => {
+  if (event.target.className !== "short-url-cell") return;
+  const tooltip = document.getElementById("copy-tooltip");
+  tooltip.hidden = false;
+});
+statisticTable.addEventListener("mouseout", (event) => {
+  if (event.target.className !== "short-url-cell") return;
+  const tooltip = document.getElementById("copy-tooltip");
+  tooltip.hidden = true;
 });
 
 axios
@@ -102,9 +120,8 @@ function printTableRow(urlObj) {
     } else {
       cell.innerText = urlObj[prop];
     }
-    if (prop === "full") {
-      cell.className = "full-url-cell";
-    }
+    if (prop === "full") cell.className = "full-url-cell";
+    if (prop === "id") cell.className = "short-url-cell";
     row.append(cell);
   }
   statisticTable.append(row);
