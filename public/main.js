@@ -53,6 +53,7 @@ topUsedButton.addEventListener("click", (event) => {
       printTable(response.data);
     })
     .catch(printError);
+  clearInterval(updates);
 });
 
 timeSort.addEventListener("click", (event) => {
@@ -62,7 +63,7 @@ timeSort.addEventListener("click", (event) => {
       printTable(response.data);
     })
     .catch(printError);
-  // clearInterval(updates);
+  clearInterval(updates);
 });
 
 statisticTable.addEventListener("click", (event) => {
@@ -90,13 +91,13 @@ axios
   .then((response) => {
     printTable(response.data);
   });
-// const updates = setInterval(() => {
-//   axios
-//     .get(window.location.origin + "/api/statistics/clicks")
-//     .then((response) => {
-//       printTable(response.data);
-//     });
-// }, 5000);
+const updates = setInterval(() => {
+  axios
+    .get(window.location.origin + "/api/statistics/clicks")
+    .then((response) => {
+      printTable(response.data);
+    });
+}, 5000);
 
 function printShortened(response) {
   const resDiv = document.getElementById("response-div");
@@ -109,7 +110,6 @@ function printError(error) {
   resDiv.style["backgroundColor"] = "rgba(255, 99, 71, 0.5)";
   resDiv.innerText = `Error: ${error.response.data.error}  (Status code: ${error.response.status})`;
   setTimeout(() => {
-    // const resDiv = document.getElementById("response-div");
     resDiv.style["backgroundColor"] = "rgba(43, 122, 226, 0.5)";
     resDiv.innerText = "";
   }, 3000);
