@@ -6,13 +6,6 @@ class DataBase {
     this.urls = [];
   }
 
-  // constructor() {
-  //   const bufferData = fs.readFileSync(
-  //     process.cwd() + "/DataBase/shortened.json"
-  //   );
-  //   this.urls = JSON.parse(bufferData);
-  // }
-
   addShortened(fullURL) {
     const shortened = new ShortenedURL(fullURL);
     this.urls.push(shortened);
@@ -62,7 +55,7 @@ class DataBase {
     return new Promise((resolve, reject) => {
       fs.writeFile(
         process.cwd() + "/DataBase/shortened.json",
-        JSON.stringify(this.urls),
+        JSON.stringify(this.urls, null, 4),
         (err) => {
           if (err) reject(err);
           else resolve("OK");

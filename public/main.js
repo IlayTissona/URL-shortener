@@ -38,13 +38,26 @@ statisticButton.addEventListener("click", (event) => {
       })
       .catch(printError);
   } else {
-    axios
-      .get(window.location.origin + "/api/statistic/" + statisticInput.value)
-      .then((response) => {
-        printTable([response.data]);
-        clearInterval(updates);
-      })
-      .catch(printError);
+    const isFull = statisticInput.value.length > 5;
+    if (!isFull) {
+      axios
+        .get(window.location.origin + "/api/statistic/" + statisticInput.value)
+        .then((response) => {
+          printTable([response.data]);
+          clearInterval(updates);
+        })
+        .catch(printError);
+    } else {
+      const splittedArr = statisticInput.value.split("/");
+      const id = splittedArr[splittedArr.length - 1];
+      axios
+        .get(window.location.origin + "/api/statistic/" + id)
+        .then((response) => {
+          printTable([response.data]);
+          clearInterval(updates);
+        })
+        .catch(printError);
+    }
   }
 });
 
@@ -112,7 +125,6 @@ function printError(error) {
   resDiv.style["backgroundColor"] = "rgba(255, 99, 71, 0.5)";
   resDiv.innerText = `Error: ${error.response.data.error}  (Status code: ${error.response.status})`;
   setTimeout(() => {
-    // const resDiv = document.getElementById("response-div");
     resDiv.style["backgroundColor"] = "rgba(43, 122, 226, 0.5)";
     resDiv.innerText = "";
   }, 3000);
@@ -159,14 +171,4 @@ function printDate(date) {
     }
   }
   return `${out.day}/${out.month}/${out.year} - ${out.hours}:${out.minutes}`; // DD/MM/YYYY - HH:MM
-}
-
-function showSpinner() {
-  const resDiv = document.getElementById("response-div");
-  resDiv.style["backgroundColor"] = "lightblue";
-  const spinnerInterval = setInterval(() => {
-    resDiv.innerText += ".";
-  }, 50);
-  // clearInterval(spinnerInterval);
-  return spinnerInterval;
 }
