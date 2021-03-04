@@ -10,7 +10,12 @@ const statisticTable = document.getElementById("statistics-table");
 
 shortButton.addEventListener("click", (event) => {
   if (!inputURL.value) {
-    alert("Please enter URL to short");
+    printError({
+      response: {
+        data: { error: "You must enter a URL" },
+        status: "You're an idiot",
+      },
+    });
     return;
   }
   axios
@@ -102,7 +107,7 @@ function printShortened(response) {
 function printError(error) {
   const resDiv = document.getElementById("response-div");
   resDiv.style["backgroundColor"] = "rgba(255, 99, 71, 0.5)";
-  resDiv.innerText = `Error: ${error.response.data.error}  (Status code ${error.response.status})`;
+  resDiv.innerText = `Error: ${error.response.data.error}  (Status code: ${error.response.status})`;
 }
 
 function printTable(urlsArr) {
