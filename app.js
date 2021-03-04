@@ -34,7 +34,7 @@ app.get("/api/short/:id", (req, res) => {
 app.get("/api/statistic/:id", (req, res) => {
   let urlObj = dataBase.getObjById(req.params.id);
   if (!urlObj) {
-    res.sendStatus(404);
+    res.status(404).send({ error: "No URL found for id" });
     return;
   }
   res.json(urlObj);

@@ -4,12 +4,13 @@ const app = require("./app.js");
 const FS = require("fs");
 const dataBase = require("./dataBaseIndex.js");
 const { TestScheduler } = require("jest");
-const dataCheck = {
-  full: "http://www.testurl.test",
-  id: "Akemu",
-  createdAt: 1614772880864,
-  clicks: 0,
-};
+let dataCheck = { full: "http://www.testurl.test" };
+//  = {
+//   full: "http://www.testurl.test",
+//   id: "7FHt0",
+//   createdAt: 1614817002422,
+//   clicks: 0,
+// };
 
 beforeAll(async () => {
   await dataBase.load();
@@ -22,6 +23,7 @@ describe("Post method tests", () => {
       .send({ fullUrl: "http://www.testurl.test" });
     expect(response.status).toBe(200);
     expect(response.text.length).toBeLessThan("http://www.testurl.test".length);
+    dataCheck.id = response.text;
   });
   it("Should response with an error if receiving an invalid URL", async () => {
     let response = await request(app)
@@ -33,7 +35,7 @@ describe("Post method tests", () => {
   it("Should response with the same id if receiving an existing URL", async () => {
     let response = await request(app)
       .post("/api/short/new")
-      .send({ fullUrl: "http://www.testurl.test" });
+      .send({ fullUrl: `${dataCheck.full}` });
     expect(response.status).toBe(200);
     expect(response.text).toBe(dataCheck.id);
   });
@@ -50,10 +52,12 @@ describe("Get method tests", () => {
     let response = await request(app).get("/api/statistic/" + dataCheck.id);
     expect(response.status).toBe(200);
     const resText = response.text;
-    const numberRegEx = /\"clicks\":(\d*)/;
-    const clicks = resText.match(numberRegEx);
+    const clicksRegExp = /\"clicks\":(\d*)/;
+    const dateRegExp = /\"createdAt\":(\d*)/;
+    const clicks = resText.match(clicksRegExp);
+    const date = resText.match(dateRegExp);
     expect(resText).toEqual(
-      `{\"full\":\"http://www.testurl.test\",\"id\":\"Akemu\",\"createdAt\":1614772880864,${clicks[0]}}`
+      `{\"full\":\"${dataCheck.full}\",\"id\":\"${dataCheck.id}\",${date[0]},${clicks[0]}}`
     );
   });
 
@@ -105,10 +109,12 @@ describe("Final test in honor of Ricky LaFlour", () => {
     );
     expect(statisticsRes.status).toBe(200);
     const resText = statisticsRes.text;
-    const numberRegEx = /\"clicks\":(\d*)/;
-    const clicks = resText.match(numberRegEx);
+    const clicksRegExp = /\"clicks\":(\d*)/;
+    const dateRegExp = /\"createdAt\":(\d*)/;
+    const clicks = resText.match(clicksRegExp);
+    const date = resText.match(dateRegExp);
     expect(resText).toEqual(
-      `{\"full\":\"http://www.testurl.test\",\"id\":\"Akemu\",\"createdAt\":1614772880864,${clicks[0]}}`
+      `{\"full\":\"${dataCheck.full}\",\"id\":\"${dataCheck.id}\",${date[0]},${clicks[0]}}`
     );
 
     let clicksRes = await request(app).get("/api/statistic/" + dataCheck.id);

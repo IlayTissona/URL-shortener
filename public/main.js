@@ -20,23 +20,24 @@ shortButton.addEventListener("click", (event) => {
     .then((response) => {
       printShortened(response);
     })
-    .catch((error) => {
-      printError(error);
-    });
+    .catch(printError);
 });
 
 statisticButton.addEventListener("click", (event) => {
   if (!statisticInput.value) {
-    axios.get(window.location.origin + "/api/statistics/").then((response) => {
-      console.log(response);
-      printTable(response.data);
-    });
+    axios
+      .get(window.location.origin + "/api/statistics/")
+      .then((response) => {
+        printTable(response.data);
+      })
+      .catch(printError);
   } else {
     axios
       .get(window.location.origin + "/api/statistic/" + statisticInput.value)
       .then((response) => {
         printTable([response.data]);
-      });
+      })
+      .catch(printError);
   }
 });
 
@@ -45,7 +46,8 @@ topUsedButton.addEventListener("click", (event) => {
     .get(window.location.origin + "/api/statistics/clicks")
     .then((response) => {
       printTable(response.data);
-    });
+    })
+    .catch(printError);
 });
 
 timeSort.addEventListener("click", (event) => {
@@ -53,7 +55,8 @@ timeSort.addEventListener("click", (event) => {
     .get(window.location.origin + "/api/statistics/createdAt")
     .then((response) => {
       printTable(response.data);
-    });
+    })
+    .catch(printError);
   // clearInterval(updates);
 });
 
@@ -66,11 +69,13 @@ statisticTable.addEventListener("click", (event) => {
 
 statisticTable.addEventListener("mouseover", (event) => {
   if (event.target.className !== "short-url-cell") return;
+  event.target.style.backgroundColor = "rgba(43, 122, 226, 0.5)";
   const tooltip = document.getElementById("copy-tooltip");
   tooltip.hidden = false;
 });
 statisticTable.addEventListener("mouseout", (event) => {
   if (event.target.className !== "short-url-cell") return;
+  event.target.style.backgroundColor = "transparent";
   const tooltip = document.getElementById("copy-tooltip");
   tooltip.hidden = true;
 });
@@ -90,13 +95,13 @@ axios
 
 function printShortened(response) {
   const resDiv = document.getElementById("response-div");
-  resDiv.style["backgroundColor"] = "green";
+  resDiv.style["backgroundColor"] = "rgba(172, 255, 47, 0.5)";
   resDiv.innerText = `Short Url : ${window.location.origin}/api/short/${response.data}`;
 }
 
 function printError(error) {
   const resDiv = document.getElementById("response-div");
-  resDiv.style["backgroundColor"] = "red";
+  resDiv.style["backgroundColor"] = "rgba(255, 99, 71, 0.5)";
   resDiv.innerText = `Error: ${error.response.data.error}  (Status code ${error.response.status})`;
 }
 
@@ -141,4 +146,14 @@ function printDate(date) {
     }
   }
   return `${out.day}/${out.month}/${out.year} - ${out.hours}:${out.minutes}`; // DD/MM/YYYY - HH:MM
+}
+
+function showSpinner() {
+  const resDiv = document.getElementById("response-div");
+  resDiv.style["backgroundColor"] = "lightblue";
+  const spinnerInterval = setInterval(() => {
+    resDiv.innerText += ".";
+  }, 50);
+  // clearInterval(spinnerInterval);
+  return spinnerInterval;
 }
