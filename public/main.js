@@ -34,6 +34,7 @@ statisticButton.addEventListener("click", (event) => {
       .get(window.location.origin + "/api/statistics/")
       .then((response) => {
         printTable(response.data);
+        clearInterval(updates);
       })
       .catch(printError);
   } else {
@@ -41,6 +42,7 @@ statisticButton.addEventListener("click", (event) => {
       .get(window.location.origin + "/api/statistic/" + statisticInput.value)
       .then((response) => {
         printTable([response.data]);
+        clearInterval(updates);
       })
       .catch(printError);
   }
@@ -51,6 +53,7 @@ topUsedButton.addEventListener("click", (event) => {
     .get(window.location.origin + "/api/statistics/clicks")
     .then((response) => {
       printTable(response.data);
+      clearInterval(updates);
     })
     .catch(printError);
 });
@@ -60,9 +63,9 @@ timeSort.addEventListener("click", (event) => {
     .get(window.location.origin + "/api/statistics/createdAt")
     .then((response) => {
       printTable(response.data);
+      clearInterval(updates);
     })
     .catch(printError);
-  // clearInterval(updates);
 });
 
 statisticTable.addEventListener("click", (event) => {
@@ -90,13 +93,13 @@ axios
   .then((response) => {
     printTable(response.data);
   });
-// const updates = setInterval(() => {
-//   axios
-//     .get(window.location.origin + "/api/statistics/clicks")
-//     .then((response) => {
-//       printTable(response.data);
-//     });
-// }, 5000);
+const updates = setInterval(() => {
+  axios
+    .get(window.location.origin + "/api/statistics/clicks")
+    .then((response) => {
+      printTable(response.data);
+    });
+}, 5000);
 
 function printShortened(response) {
   const resDiv = document.getElementById("response-div");
