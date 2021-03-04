@@ -108,6 +108,11 @@ function printError(error) {
   const resDiv = document.getElementById("response-div");
   resDiv.style["backgroundColor"] = "rgba(255, 99, 71, 0.5)";
   resDiv.innerText = `Error: ${error.response.data.error}  (Status code: ${error.response.status})`;
+  setTimeout(() => {
+    // const resDiv = document.getElementById("response-div");
+    resDiv.style["backgroundColor"] = "rgba(43, 122, 226, 0.5)";
+    resDiv.innerText = "";
+  }, 3000);
 }
 
 function printTable(urlsArr) {
