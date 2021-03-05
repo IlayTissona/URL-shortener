@@ -22,7 +22,11 @@ The table is updating in real time, so if someone else adds a URL to the list, i
 
 There is an option to search for a shortened URL, and get all data only for this one (full URL, shortened URL, creation time, and clicks count).
 
+Search bar accepts either ID only (CcroW) or full short URL (https://url-shortener.ilaytissona.repl.co/api/short/CcroW)
+
 There is also an option to sort table by time of creation or by popularity.
+
+Short URLS column has a "click to copy" functionality, to easily copy the short URL you want to publish.
 
 ## Who am I?
 
